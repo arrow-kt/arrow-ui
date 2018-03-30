@@ -1,15 +1,16 @@
 package arrow.data
 
-import arrow.*
+import arrow.Kind
 import arrow.core.Either
 import arrow.core.Eval
 import arrow.core.Tuple2
+import arrow.higherkind
 import arrow.typeclasses.Applicative
 
 fun <A> SequenceKOf<A>.toList(): List<A> = this.fix().sequence.toList()
 
 @higherkind
-data class SequenceK<out A> constructor(val sequence: Sequence<A>) : SequenceKOf<A>, Sequence<A> by sequence {
+data class SequenceK<out A> (val sequence: Sequence<A>) : SequenceKOf<A>, Sequence<A> by sequence {
 
     fun <B> flatMap(f: (A) -> SequenceKOf<B>): SequenceK<B> = this.fix().sequence.flatMap { f(it).fix().sequence }.k()
 
@@ -27,10 +28,11 @@ data class SequenceK<out A> constructor(val sequence: Sequence<A>) : SequenceKOf
         return Eval.defer { loop(this.fix()) }
     }
 
-    fun <G, B> traverse(f: (A) -> Kind<G, B>, GA: Applicative<G>): Kind<G, SequenceK<B>> =
-            foldRight(Eval.always { GA.pure(emptySequence<B>().k()) }) { a, eval ->
-                GA.map2Eval(f(a), eval) { (sequenceOf(it.a) + it.b).k() }
-            }.value()
+    fun <G, B> traverse(GA: Applicative<G>, f: (A) -> Kind<G, B>): Kind<G, SequenceK<B>> = GA.run {
+        foldRight(Eval.always { just(emptySequence<B>().k()) }) { a, eval ->
+            f(a).map2Eval(eval) { (sequenceOf(it.a) + it.b).k() }
+        }.value()
+    }
 
     fun <B, Z> map2(fb: SequenceKOf<B>, f: (Tuple2<A, B>) -> Z): SequenceK<Z> =
             this.fix().flatMap { a ->
@@ -41,7 +43,7 @@ data class SequenceK<out A> constructor(val sequence: Sequence<A>) : SequenceKOf
 
     companion object {
 
-        fun <A> pure(a: A): SequenceK<A> = sequenceOf(a).k()
+        fun <A> just(a: A): SequenceK<A> = sequenceOf(a).k()
 
         fun <A> empty(): SequenceK<A> = emptySequence<A>().k()
 
@@ -75,6 +77,6 @@ data class SequenceK<out A> constructor(val sequence: Sequence<A>) : SequenceKOf
     }
 }
 
-fun <A> SequenceK<A>.combineK(y: SequenceKOf<A>): SequenceK<A> = (this.sequence + y.fix().sequence).k()
+fun <A> SequenceKOf<A>.combineK(y: SequenceKOf<A>): SequenceK<A> = (fix().sequence + y.fix().sequence).k()
 
 fun <A> Sequence<A>.k(): SequenceK<A> = SequenceK(this)

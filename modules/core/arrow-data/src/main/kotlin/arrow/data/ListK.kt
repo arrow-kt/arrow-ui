@@ -1,14 +1,15 @@
 package arrow.data
 
-import arrow.*
+import arrow.Kind
 import arrow.core.Either
 import arrow.core.Eval
 import arrow.core.Option
 import arrow.core.Tuple2
+import arrow.higherkind
 import arrow.typeclasses.Applicative
 
 @higherkind
-data class ListK<out A> constructor(val list: List<A>) : ListKOf<A>, List<A> by list {
+data class ListK<out A> (val list: List<A>) : ListKOf<A>, List<A> by list {
 
     fun <B> flatMap(f: (A) -> ListKOf<B>): ListK<B> = this.fix().list.flatMap { f(it).fix().list }.k()
 
@@ -26,10 +27,11 @@ data class ListK<out A> constructor(val list: List<A>) : ListKOf<A>, List<A> by 
 
     fun <B> ap(ff: ListKOf<(A) -> B>): ListK<B> = ff.fix().flatMap { f -> map(f) }.fix()
 
-    fun <G, B> traverse(f: (A) -> Kind<G, B>, GA: Applicative<G>): Kind<G, ListK<B>> =
-            foldRight(Eval.always { GA.pure(emptyList<B>().k()) }) { a, eval ->
-                GA.map2Eval(f(a), eval) { (listOf(it.a) + it.b).k() }
-            }.value()
+    fun <G, B> traverse(GA: Applicative<G>, f: (A) -> Kind<G, B>): Kind<G, ListK<B>> = GA.run {
+        foldRight(Eval.always { just(emptyList<B>().k()) }) { a, eval ->
+            f(a).map2Eval(eval) { (listOf(it.a) + it.b).k() }
+        }.value()
+    }
 
     fun <B, Z> map2(fb: ListKOf<B>, f: (Tuple2<A, B>) -> Z): ListK<Z> =
             this.fix().flatMap { a ->
@@ -39,11 +41,11 @@ data class ListK<out A> constructor(val list: List<A>) : ListKOf<A>, List<A> by 
             }.fix()
 
     fun <B> mapFilter(f: (A) -> Option<B>): ListK<B> =
-            flatMap({ a -> f(a).fold({ empty<B>() }, { pure(it) }) })
+            flatMap({ a -> f(a).fold({ empty<B>() }, { just(it) }) })
 
     companion object {
 
-        fun <A> pure(a: A): ListK<A> = listOf(a).k()
+        fun <A> just(a: A): ListK<A> = listOf(a).k()
 
         fun <A> empty(): ListK<A> = emptyList<A>().k()
 
@@ -73,6 +75,7 @@ data class ListK<out A> constructor(val list: List<A>) : ListKOf<A>, List<A> by 
 
 }
 
-fun <A> ListK<A>.combineK(y: ListKOf<A>): ListK<A> = (this.list + y.fix().list).k()
+fun <A> ListKOf<A>.combineK(y: ListKOf<A>): ListK<A> =
+        (fix().list + y.fix().list).k()
 
 fun <A> List<A>.k(): ListK<A> = ListK(this)
