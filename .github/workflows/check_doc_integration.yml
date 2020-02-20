@@ -19,6 +19,8 @@ jobs:
       if: failure()
       id: create-issue
       run: |
+        git clone https://github.com/arrow-kt/arrow-ui.git
+        cd arrow-ui
         echo $(git log -1 --pretty=format:%s)
         echo ::set-output name=title::$(git log -1 --pretty=format:%s)
         echo -e "## Details\n" > issue.log
