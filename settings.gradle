@@ -1,4 +1,6 @@
-rootProject.name = 'arrow'
+rootProject.name = 'arrow-ui'
 
 include 'arrow-ui'
 include 'arrow-ui-data'
+include 'arrow-ui-test'
+include 'arrow-docs'
