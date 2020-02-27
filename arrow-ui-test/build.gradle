@@ -10,6 +10,7 @@ plugins {
 apply from: "$SUBPROJECT_CONF"
 
 dependencies {
+    compile "io.arrow-kt:arrow-core-test:$VERSION_NAME"
     compile "io.arrow-kt:arrow-core-data:$VERSION_NAME"
     compile "io.arrow-kt:arrow-mtl-data:$VERSION_NAME"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
