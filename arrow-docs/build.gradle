@@ -18,6 +18,10 @@ apply from: "$SUBPROJECT_CONF"
 
 apply plugin: 'ank-gradle-plugin'
 
+dependencies {
+    compile "io.arrow-kt:arrow-fx:$VERSION_NAME", excludeArrow
+}
+
 ank {
     source = file("${projectDir}/docs")
     target = file("${projectDir}/build/site")
