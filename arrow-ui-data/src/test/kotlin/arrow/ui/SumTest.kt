@@ -1,10 +1,8 @@
 package arrow.ui
 
 import arrow.Kind
-import arrow.core.Const
 import arrow.core.ForId
 import arrow.core.Id
-import arrow.core.extensions.const.eqK.eqK
 import arrow.core.extensions.eq
 import arrow.core.extensions.hash
 import arrow.core.extensions.id.comonad.comonad
@@ -13,11 +11,11 @@ import arrow.core.extensions.id.eqK.eqK
 import arrow.core.extensions.id.functor.functor
 import arrow.core.extensions.id.hash.hash
 import arrow.core.fix
-import arrow.test.UnitSpec
-import arrow.test.generators.GenK
-import arrow.test.generators.genK
-import arrow.test.laws.ComonadLaws
-import arrow.test.laws.HashLaws
+import arrow.core.test.UnitSpec
+import arrow.core.test.generators.GenK
+import arrow.core.test.generators.genK
+import arrow.core.test.laws.ComonadLaws
+import arrow.core.test.laws.HashLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.Hash
 import arrow.ui.extensions.sum.comonad.comonad
@@ -47,11 +45,9 @@ class SumTest : UnitSpec() {
     val IDEQ = Eq<Kind<ForId, Int>> { a, b -> Id.eq(Int.eq()).run { a.fix().eqv(b.fix()) } }
     val IDH = Hash<Kind<ForId, Int>> { Id.hash(Int.hash()).run { it.fix().hash() } }
 
-    val genSumConst =
-      genk(Const.genK(Gen.int()), Const.genK(Gen.int()))
-
-    val constEQK = Const.eqK(Int.eq())
-    val sumConstEQK = Sum.eqK(constEQK, constEQK)
+    // val genSumConst = genk(Const.genK(Gen.int()), Const.genK(Gen.int()))
+    // val constEQK = Const.eqK(Int.eq())
+    // val sumConstEQK = Sum.eqK(constEQK, constEQK)
 
     testLaws(
       // TODO: tests fail when Sum.right is also generated. (https://github.com/arrow-kt/arrow/issues/1856)

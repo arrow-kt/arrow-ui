@@ -2,9 +2,9 @@ package arrow.ui
 
 import arrow.Kind
 import arrow.core.Id
-import arrow.test.UnitSpec
-import arrow.test.generators.GenK
-import arrow.test.laws.ComonadLaws
+import arrow.core.test.UnitSpec
+import arrow.core.test.generators.GenK
+import arrow.core.test.laws.ComonadLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.EqK
 import arrow.ui.extensions.moore.comonad.comonad

@@ -8,11 +8,11 @@ import arrow.core.Tuple2Of
 import arrow.core.extensions.id.applicative.applicative
 import arrow.core.extensions.id.comonad.comonad
 import arrow.core.fix
-import arrow.test.UnitSpec
-import arrow.test.generators.GenK
-import arrow.test.generators.genK
-import arrow.test.laws.ApplicativeLaws
-import arrow.test.laws.ComonadLaws
+import arrow.core.test.UnitSpec
+import arrow.core.test.generators.GenK
+import arrow.core.test.generators.genK
+import arrow.core.test.laws.ApplicativeLaws
+import arrow.core.test.laws.ComonadLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.EqK
 import arrow.ui.extensions.day.applicative.applicative
