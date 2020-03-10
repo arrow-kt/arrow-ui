@@ -16,7 +16,7 @@ apply from: "$PUBLISH_CONF"
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
     compile project(":arrow-ui-data")
-    kapt "io.arrow-kt:arrow-meta:$VERSION_NAME", excludeArrow
+    kapt "io.arrow-kt:arrow-meta:$VERSION_NAME"
     testRuntime "org.junit.vintage:junit-vintage-engine:$JUNIT_VINTAGE_VERSION"
     testCompile "io.kotlintest:kotlintest-runner-junit5:$KOTLIN_TEST_VERSION", excludeArrow
 }
