@@ -5,7 +5,6 @@ import arrow.core.ForId
 import arrow.core.Id
 import arrow.core.Tuple2
 import arrow.core.Tuple2Of
-import arrow.core.extensions.id.applicative.applicative
 import arrow.core.extensions.id.comonad.comonad
 import arrow.core.fix
 import arrow.core.test.UnitSpec
@@ -15,11 +14,10 @@ import arrow.core.test.laws.ApplicativeLaws
 import arrow.core.test.laws.ComonadLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.EqK
-import arrow.ui.extensions.day.applicative.applicative
-import arrow.ui.extensions.day.comonad.comonad
-import arrow.ui.extensions.day.functor.functor
+import arrow.ui.extensions.comonad
 import io.kotlintest.properties.Gen
 import io.kotlintest.shouldBe
+import arrow.ui.extensions.applicative
 
 class DayTest : UnitSpec() {
   init {
@@ -49,8 +47,8 @@ class DayTest : UnitSpec() {
     val gk = GENK(Id.genK(), Id.genK(), Gen.int(), Gen.int())
 
     testLaws(
-      ApplicativeLaws.laws(Day.applicative(Id.applicative(), Id.applicative()), Day.functor(), gk, EQK),
-      ComonadLaws.laws(Day.comonad(Id.comonad(), Id.comonad()), gk, EQK)
+      ApplicativeLaws.laws(Day.applicative(), Day.comonad(), gk, EQK),
+      ComonadLaws.laws(Day.comonad(), gk, EQK)
     )
 
     val get: (Int, Int) -> Tuple2<Int, Int> = { left, right -> Tuple2(left, right) }

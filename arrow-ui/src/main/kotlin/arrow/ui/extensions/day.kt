@@ -1,6 +1,8 @@
 package arrow.ui.extensions
 
 import arrow.Kind
+import arrow.Proof
+import arrow.TypeProof
 import arrow.ui.Day
 import arrow.extension
 import arrow.typeclasses.Applicative
@@ -11,8 +13,9 @@ import arrow.ui.DayOf
 import arrow.ui.DayPartialOf
 import arrow.ui.fix
 import arrow.undocumented
+import arrowx.given
 
-@extension
+
 @undocumented
 interface DayComonad<F, G> : Comonad<DayPartialOf<F, G>> {
   fun CF(): Comonad<F>
@@ -29,7 +32,17 @@ interface DayComonad<F, G> : Comonad<DayPartialOf<F, G>> {
     fix().mapLazy(f)
 }
 
-@extension
+fun <A> summon(ev: @given A = arrow.given): A = ev
+
+@Proof(TypeProof.Extension)
+fun <F, G> Day.Companion.comonad(CF: @given Comonad<F> = arrow.given, CG: @given Comonad<G> = arrow.given) : Comonad<DayPartialOf<F, G>> =
+  object : DayComonad<F, G>{
+    override fun CF(): Comonad<F> = CF
+
+    override fun CG(): Comonad<G> = CG
+  }
+
+
 @undocumented
 interface DayFunctor<F, G> : Functor<DayPartialOf<F, G>> {
 
@@ -37,7 +50,7 @@ interface DayFunctor<F, G> : Functor<DayPartialOf<F, G>> {
     fix().mapLazy(f)
 }
 
-@extension
+
 @undocumented
 interface DayApply<F, G> : Apply<DayPartialOf<F, G>> {
   fun AF(): Applicative<F>
@@ -51,7 +64,7 @@ interface DayApply<F, G> : Apply<DayPartialOf<F, G>> {
     fix().ap(AF(), AG(), ff)
 }
 
-@extension
+
 @undocumented
 interface DayApplicative<F, G> : Applicative<DayPartialOf<F, G>> {
   fun AF(): Applicative<F>
@@ -67,3 +80,11 @@ interface DayApplicative<F, G> : Applicative<DayPartialOf<F, G>> {
   override fun <A, B> Kind<DayPartialOf<F, G>, A>.ap(ff: Kind<DayPartialOf<F, G>, (A) -> B>): Day<F, G, B> =
     fix().ap(AF(), AG(), ff)
 }
+
+@Proof(TypeProof.Extension)
+fun <F, G> Day.Companion.applicative(AF: @given Applicative<F> = arrow.given, AG: @given Applicative<G> = arrow.given) : Applicative<DayPartialOf<F, G>> =
+  object : DayApplicative<F, G>{
+    override fun AF(): Applicative<F> = AF
+
+    override fun AG(): Applicative<G> = AG
+  }
