@@ -2,4 +2,3 @@ rootProject.name = 'arrow-ui-lib'
 
 include 'arrow-ui'
 include 'arrow-ui-data'
-include 'arrow-docs'
