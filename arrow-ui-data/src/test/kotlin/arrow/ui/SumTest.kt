@@ -43,7 +43,7 @@ class SumTest : UnitSpec() {
 
     val sumIdEQK = Sum.eqK(Id.eqK(), Id.eqK())
     val IDEQ = Eq<Kind<ForId, Int>> { a, b -> Id.eq(Int.eq()).run { a.fix().eqv(b.fix()) } }
-    val IDH = Hash<Kind<ForId, Int>> { Id.hash(Int.hash()).run { it.fix().hash() } }
+    val IDH = Id.hash(Int.hash()) as Hash<Kind<ForId, Int>>
 
     // val genSumConst = genk(Const.genK(Gen.int()), Const.genK(Gen.int()))
     // val constEQK = Const.eqK(Int.eq())

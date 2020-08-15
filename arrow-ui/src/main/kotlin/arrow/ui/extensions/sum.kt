@@ -13,6 +13,7 @@ import arrow.typeclasses.Eq
 import arrow.typeclasses.EqK
 import arrow.typeclasses.Functor
 import arrow.typeclasses.Hash
+import arrow.typeclasses.hashWithSalt
 import arrow.ui.Sum
 import arrow.ui.SumPartialOf
 import arrow.ui.fix
@@ -59,14 +60,14 @@ interface SumEq<F, G, A> : Eq<Sum<F, G, A>> {
 }
 
 @extension
-interface SumHash<F, G, A> : Hash<Sum<F, G, A>>, SumEq<F, G, A> {
+interface SumHash<F, G, A> : Hash<Sum<F, G, A>> {
   fun HF(): Hash<Kind<F, A>>
   fun HG(): Hash<Kind<G, A>>
 
-  override fun EQF(): Eq<Kind<F, A>> = HF()
-  override fun EQG(): Eq<Kind<G, A>> = HG()
-
-  override fun Sum<F, G, A>.hash(): Int = 31 * HF().run { left.hash() } + HG().run { right.hash() }
+  override fun Sum<F, G, A>.hashWithSalt(salt: Int): Int = when (side) {
+    Sum.Side.Left -> HF().run { left.hashWithSalt(salt.hashWithSalt(0)) }
+    Sum.Side.Right -> HG().run { right.hashWithSalt(salt.hashWithSalt(1)) }
+  }
 }
 
 @extension
