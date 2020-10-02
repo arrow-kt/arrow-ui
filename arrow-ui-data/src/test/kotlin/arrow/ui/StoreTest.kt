@@ -1,12 +1,15 @@
 package arrow.ui
 
 import arrow.Kind
+import arrow.core.Id
+import arrow.core.extensions.id.comonad.comonad
 import arrow.core.test.UnitSpec
 import arrow.core.test.generators.GenK
 import arrow.core.test.laws.ComonadLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.EqK
-import arrow.ui.extensions.store.comonad.comonad
+import arrow.ui.extensions.comonad
+import arrow.ui.extensions.storet.comonad.comonad
 import io.kotlintest.properties.Gen
 import io.kotlintest.shouldBe
 
@@ -17,9 +20,7 @@ class StoreTest : UnitSpec() {
     fun <F> gk() = object : GenK<StorePartialOf<F>> {
       override fun <A> genK(gen: Gen<A>): Gen<Kind<StorePartialOf<F>, A>> =
         gen.map {
-          Store(it) {
-            it
-          }
+          Store(it) { it }
         } as Gen<Kind<StorePartialOf<F>, A>>
     }
 
@@ -30,7 +31,7 @@ class StoreTest : UnitSpec() {
     }
 
     testLaws(
-      ComonadLaws.laws(Store.comonad(), gk(), EQK)
+      ComonadLaws.laws(Store().comonad(), gk(), EQK)
     )
 
     val greetingStore = { name: String -> Store(name) { "Hi $it!" } }
@@ -43,8 +44,8 @@ class StoreTest : UnitSpec() {
 
     "extend should create a new Store from the current one" {
       val store = greetingStore("Cotel")
-        .coflatMap { (state) ->
-          if (state == "Cotel") "This is my master" else "This is not my master"
+        .coflatMap { store ->
+          if (store.state == "Cotel") "This is my master" else "This is not my master"
         }
 
       store.extract() shouldBe "This is my master"
