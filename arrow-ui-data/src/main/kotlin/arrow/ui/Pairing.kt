@@ -55,7 +55,9 @@ class Pairing<F, G>(private val pairing: PairingFun<F, G>) : PairingOf<F, G>, Pa
     fun <S> pairStateStore(): Pairing<StatePartialOf<S>, StorePartialOf<S>> =
       pairStateTStoreT(Id.functor(), Id.functor(), pairId())
 
-    private fun pairId(): Pairing<ForId, ForId> = Pairing(Id.functor()) { fa, gb -> fa.fix().extract()(gb) }
+    private fun pairId(): Pairing<ForId, ForId> = Pairing(Id.functor()) { fa, gb ->
+      fa.fix().extract()(gb.fix().extract())
+    }
   }
 }
 
