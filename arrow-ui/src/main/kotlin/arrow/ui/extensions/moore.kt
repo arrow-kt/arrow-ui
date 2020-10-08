@@ -1,12 +1,12 @@
 package arrow.ui.extensions
 
 import arrow.Kind
-import arrow.ui.Moore
-import arrow.ui.MoorePartialOf
-import arrow.ui.fix
 import arrow.extension
 import arrow.typeclasses.Comonad
 import arrow.typeclasses.Functor
+import arrow.ui.Moore
+import arrow.ui.MoorePartialOf
+import arrow.ui.fix
 import arrow.undocumented
 
 @extension

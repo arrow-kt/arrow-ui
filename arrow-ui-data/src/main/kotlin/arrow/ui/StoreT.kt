@@ -44,10 +44,5 @@ class StoreT<S, W, A>(
     fun <S, W, A> just(AW: Applicative<W>, MS: Monoid<S>, a: A): StoreT<S, W, A> = with(MS) {
       StoreT(empty(), AW.just(constant(a)))
     }
-
-    fun <S, W> functor(FW: Functor<W>): Functor<StoreTPartialOf<S, W>> = object : Functor<StoreTPartialOf<S, W>> {
-      override fun <A, B> Kind<StoreTPartialOf<S, W>, A>.map(f: (A) -> B): StoreT<S, W, B> =
-        fix().map(FW, f)
-    }
   }
 }

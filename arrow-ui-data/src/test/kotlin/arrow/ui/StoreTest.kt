@@ -1,15 +1,12 @@
 package arrow.ui
 
 import arrow.Kind
-import arrow.core.Id
-import arrow.core.extensions.id.comonad.comonad
 import arrow.core.test.UnitSpec
 import arrow.core.test.generators.GenK
 import arrow.core.test.laws.ComonadLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.EqK
 import arrow.ui.extensions.comonad
-import arrow.ui.extensions.storet.comonad.comonad
 import io.kotlintest.properties.Gen
 import io.kotlintest.shouldBe
 

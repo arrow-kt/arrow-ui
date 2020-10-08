@@ -4,7 +4,6 @@ import arrow.core.ForId
 import arrow.core.Id
 import arrow.core.extensions.id.applicative.applicative
 import arrow.core.extensions.id.comonad.comonad
-import arrow.core.extensions.id.comonad.extract
 import arrow.core.extensions.id.functor.functor
 import arrow.core.fix
 import arrow.typeclasses.Monoid

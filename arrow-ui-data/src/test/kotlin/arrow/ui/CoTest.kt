@@ -2,10 +2,8 @@ package arrow.ui
 
 import arrow.Kind
 import arrow.core.ForId
-import arrow.core.FunctionK
 import arrow.core.Id
 import arrow.core.extensions.id.comonad.comonad
-import arrow.core.extensions.id.functor.functor
 import arrow.core.fix
 import arrow.core.test.UnitSpec
 import arrow.core.test.generators.GenK
@@ -14,6 +12,7 @@ import arrow.core.test.laws.MonadLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.EqK
 import arrow.ui.extensions.cot.monad.monad
+import arrow.ui.extensions.functor
 import io.kotlintest.properties.Gen
 
 class CoTest : UnitSpec() {
@@ -23,8 +22,8 @@ class CoTest : UnitSpec() {
         (this.fix() to other.fix()).let {
           EQ.run {
             Id.comonad().run {
-              return pair(this).zap(this, Co.functor(), Id.just { a -> a }, this@eqK) ==
-                pair(this).zap(this, Co.functor(), Id.just { a -> a }, other)
+              return pair(this).zap(this, Co().functor(), Id.just { a -> a }, this@eqK) ==
+                pair(this).zap(this, Co().functor(), Id.just { a -> a }, other)
             }
           }
         }

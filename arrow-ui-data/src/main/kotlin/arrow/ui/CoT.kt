@@ -7,7 +7,6 @@ import arrow.core.andThen
 import arrow.core.compose
 import arrow.higherkind
 import arrow.typeclasses.Comonad
-import arrow.typeclasses.Functor
 
 typealias TransitionT<W, M, A> = CoT<W, M, A>
 
@@ -51,10 +50,5 @@ class CoT<W, M, A>(
           )
         }
       }
-
-    fun <W, M> functor() = object : Functor<CoTPartialOf<W, M>> {
-      override fun <A, B> Kind<CoTPartialOf<W, M>, A>.map(f: (A) -> B): Kind<CoTPartialOf<W, M>, B> =
-        fix().map(f)
-    }
   }
 }

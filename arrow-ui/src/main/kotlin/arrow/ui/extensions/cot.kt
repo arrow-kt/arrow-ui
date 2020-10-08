@@ -3,8 +3,6 @@ package arrow.ui.extensions
 import arrow.Kind
 import arrow.core.Either
 import arrow.core.ForId
-import arrow.core.Id
-import arrow.core.extensions.id.comonad.comonad
 import arrow.extension
 import arrow.typeclasses.Applicative
 import arrow.typeclasses.Apply
@@ -12,10 +10,10 @@ import arrow.typeclasses.Comonad
 import arrow.typeclasses.Functor
 import arrow.typeclasses.Monad
 import arrow.ui.CoApi
-import arrow.ui.CoPartialOf
 import arrow.ui.CoT
 import arrow.ui.CoTPartialOf
 import arrow.ui.extensions.cot.applicative.applicative
+import arrow.ui.extensions.cot.functor.functor
 import arrow.ui.extensions.cot.monad.monad
 import arrow.ui.fix
 

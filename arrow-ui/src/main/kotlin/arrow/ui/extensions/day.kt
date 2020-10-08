@@ -1,12 +1,12 @@
 package arrow.ui.extensions
 
 import arrow.Kind
-import arrow.ui.Day
 import arrow.extension
 import arrow.typeclasses.Applicative
 import arrow.typeclasses.Apply
 import arrow.typeclasses.Comonad
 import arrow.typeclasses.Functor
+import arrow.ui.Day
 import arrow.ui.DayOf
 import arrow.ui.DayPartialOf
 import arrow.ui.fix

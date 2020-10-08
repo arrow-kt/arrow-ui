@@ -6,9 +6,6 @@ import arrow.core.Id
 import arrow.core.extensions.id.applicative.applicative
 import arrow.core.extensions.id.comonad.comonad
 import arrow.core.extensions.id.functor.functor
-import arrow.ui.Store
-import arrow.ui.StorePartialOf
-import arrow.ui.fix
 import arrow.extension
 import arrow.typeclasses.Applicative
 import arrow.typeclasses.Comonad
@@ -19,6 +16,8 @@ import arrow.ui.StoreT
 import arrow.ui.StoreTPartialOf
 import arrow.ui.extensions.storet.applicative.applicative
 import arrow.ui.extensions.storet.comonad.comonad
+import arrow.ui.extensions.storet.functor.functor
+import arrow.ui.fix
 import arrow.undocumented
 
 @extension
