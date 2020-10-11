@@ -84,28 +84,5 @@ class Pairing<F, G>(private val pairing: PairingFun<F, G>) : PairingOf<F, G>, Pa
   companion object {
     operator fun <F, G> invoke(FF: Functor<F>, zap: (Kind<F, (Any) -> Any>, Kind<G, Any>) -> Any): Pairing<F, G> =
       FF.run { Pairing { fa, gb, fab -> zap(fa.map(fab.curry()), gb) } }
-
-    /**
-     * Provides a Pairing for [StateT] - [StoreT]
-     */
-    fun <S, F, G> pairStateTStoreT(FF: Functor<F>, FG: Functor<G>, pairing: Pairing<F, G>): Pairing<StateTPartialOf<S, F>, StoreTPartialOf<S, G>> =
-      Pairing { state, store, f ->
-        pairing.pair(FF, FG, state.fix().run(store.fix().state), store.fix().render) { a, b ->
-          f(a.b, b(a.a))
-        }
-      }
-
-    /**
-     * Provides a Pairing for [State] - [Store]
-     */
-    fun <S> pairStateStore(): Pairing<StatePartialOf<S>, StorePartialOf<S>> =
-      pairStateTStoreT(Id.functor(), Id.functor(), pairId())
-
-    private fun pairId(): Pairing<ForId, ForId> = Pairing(Id.functor()) { fa, gb ->
-      fa.fix().extract()(gb.fix().extract())
-    }
   }
 }
-
-fun <F> Comonad<F>.pair(FF: Functor<F>): Pairing<F, CoPartialOf<F>> =
-  Pairing(FF) { wab, cowa -> cowa.fix().run(wab) }

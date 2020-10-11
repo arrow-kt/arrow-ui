@@ -20,7 +20,7 @@ typealias TransitionT<W, M, A> = CoT<W, M, A>
 @higherkind
 class CoT<W, M, A>(
   private val CMW: Comonad<W>,
-  private val cow: (Kind<W, (A) -> Kind<M, Any>>) -> Kind<M, Any>
+  internal val cow: (Kind<W, (A) -> Kind<M, Any>>) -> Kind<M, Any>
 ) : CoTOf<W, M, A>, CoTKindedJ<W, M, A>, Comonad<W> by CMW {
 
   /**

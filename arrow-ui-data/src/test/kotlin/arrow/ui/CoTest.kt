@@ -11,6 +11,7 @@ import arrow.core.test.generators.genK
 import arrow.core.test.laws.MonadLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.EqK
+import arrow.ui.CoApi.pair
 import arrow.ui.extensions.cot.monad.monad
 import arrow.ui.extensions.functor
 import io.kotlintest.properties.Gen

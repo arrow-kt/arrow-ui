@@ -9,7 +9,10 @@ import arrow.typeclasses.Apply
 import arrow.typeclasses.Comonad
 import arrow.typeclasses.Functor
 import arrow.typeclasses.Monad
+import arrow.typeclasses.MonadSyntax
+import arrow.ui.Co
 import arrow.ui.CoApi
+import arrow.ui.CoPartialOf
 import arrow.ui.CoT
 import arrow.ui.CoTPartialOf
 import arrow.ui.extensions.cot.applicative.applicative
@@ -60,8 +63,14 @@ interface CoTMonad<W, M> : Monad<CoTPartialOf<W, M>>, CoTApplicative<W, M> {
     fix().map(f)
 }
 
+fun <M, W, A> CoT.Companion.fx(CMW: Comonad<W>, c: suspend MonadSyntax<CoTPartialOf<W, M>>.() -> A): CoT<W, M, A> =
+  CoT.monad<W, M>(CMW).fx.monad(c).fix()
+
 fun <W> CoApi.functor(): Functor<CoTPartialOf<W, ForId>> = CoT.functor()
 
 fun <W> CoApi.applicative(CMW: Comonad<W>): Applicative<CoTPartialOf<W, ForId>> = CoT.applicative(CMW)
 
 fun <W> CoApi.monad(CMW: Comonad<W>): Monad<CoTPartialOf<W, ForId>> = CoT.monad(CMW)
+
+fun <W, A> CoApi.fx(CMW: Comonad<W>, c: suspend MonadSyntax<CoPartialOf<W>>.() -> A): Co<W, A> =
+  CoApi.monad(CMW).fx.monad(c).fix()
