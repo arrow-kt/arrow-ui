@@ -12,7 +12,7 @@ import arrow.typeclasses.Comonad
 import arrow.typeclasses.Functor
 import arrow.ui.Co
 import arrow.ui.CoPartialOf
-import arrow.ui.MooreInputPartialOf
+import arrow.ui.MooreActionPartialOf
 import arrow.ui.MoorePartialOf
 import arrow.ui.Pairing
 import arrow.ui.Store
@@ -43,9 +43,9 @@ fun <S> Pairing.Companion.pairStateStore(): Pairing<StatePartialOf<S>, StorePart
   pairStateTStoreT(Id.functor(), Id.functor(), pairId())
 
 /**
- * Provides a Pairing for [MooreInput] - [Moore]
+ * Provides a Pairing for [MooreAction] - [Moore]
  */
-fun <I> Pairing.Companion.pairInputMoore(CMW: Comonad<MoorePartialOf<I>>): Pairing<MooreInputPartialOf<I>, MoorePartialOf<I>> =
+fun <I> Pairing.Companion.pairActionMoore(CMW: Comonad<MoorePartialOf<I>>): Pairing<MooreActionPartialOf<I>, MoorePartialOf<I>> =
   Pairing { input, moore, f ->
     CMW.pairing(CMW).pairFlipped(CMW, Co().functor(), input, moore, f)
   }

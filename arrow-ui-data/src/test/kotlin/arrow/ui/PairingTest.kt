@@ -11,7 +11,7 @@ import arrow.ui.extensions.fx
 import arrow.ui.extensions.moore.comonad.comonad
 import arrow.ui.extensions.moore.comonad.duplicate
 import arrow.ui.extensions.moore.functor.functor
-import arrow.ui.extensions.pairInputMoore
+import arrow.ui.extensions.pairActionMoore
 import arrow.ui.extensions.pairStateStore
 import io.kotlintest.shouldBe
 
@@ -38,7 +38,7 @@ class PairingTest : UnitSpec() {
       w2.extract() shouldBe 31
     }
 
-    "Test Pairing MooreInput <-> Moore" {
+    "Test Pairing MooreAction <-> Moore" {
       fun render(n: Int): String = if (n % 2 == 0) "$n is even" else "$n is odd"
 
       fun update(state: Int, action: Input): Int = when (action) {
@@ -48,7 +48,7 @@ class PairingTest : UnitSpec() {
 
       val w = Moore.from(0, ::render, ::update)
 
-      val actions = with(MooreInput()) {
+      val actions = with(MooreAction()) {
         fx<Input, Unit> {
           !from(Moore.comonad(), Input.Increment)
           !from(Moore.comonad(), Input.Increment)
@@ -58,8 +58,8 @@ class PairingTest : UnitSpec() {
         }.fix()
       }
 
-      val w2 = Pairing.pairInputMoore<Input>(Moore.comonad()).select(
-        MooreInput().functor(),
+      val w2 = Pairing.pairActionMoore<Input>(Moore.comonad()).select(
+        MooreAction().functor(),
         Moore.functor(),
         actions,
         w.duplicate()
