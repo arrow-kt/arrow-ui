@@ -1,19 +1,15 @@
 package arrow.ui
 
 import arrow.Kind
-import arrow.core.ForId
-import arrow.core.Id
+import arrow.core.ForEval
+import arrow.core.Eval
 import arrow.core.extensions.eq
+import arrow.core.extensions.eval.comonad.comonad
+import arrow.core.extensions.eval.functor.functor
 import arrow.core.extensions.hash
-import arrow.core.extensions.id.comonad.comonad
-import arrow.core.extensions.id.eq.eq
-import arrow.core.extensions.id.eqK.eqK
-import arrow.core.extensions.id.functor.functor
-import arrow.core.extensions.id.hash.hash
 import arrow.core.fix
 import arrow.core.test.UnitSpec
 import arrow.core.test.generators.GenK
-import arrow.core.test.generators.genK
 import arrow.core.test.laws.ComonadLaws
 import arrow.core.test.laws.HashLaws
 import arrow.typeclasses.Eq
@@ -39,11 +35,11 @@ class SumTest : UnitSpec() {
 
   init {
 
-    val genkSumId = genk(Id.genK(), Id.genK())
+    val genkSumEval = genk(Eval.genK(), Eval.genK())
 
-    val sumIdEQK = Sum.eqK(Id.eqK(), Id.eqK())
-    val IDEQ = Eq<Kind<ForId, Int>> { a, b -> Id.eq(Int.eq()).run { a.fix().eqv(b.fix()) } }
-    val IDH = Id.hash(Int.hash()) as Hash<Kind<ForId, Int>>
+    val sumEvalEQK = Sum.eqK(Eval.eqK(), Eval.eqK())
+    val IDEQ = Eq<Kind<ForEval, Int>> { a, b -> Eval.eq(Int.eq()).run { a.fix().eqv(b.fix()) } }
+    val IDH = Eval.hash(Int.hash()) as Hash<Kind<ForEval, Int>>
 
     // val genSumConst = genk(Const.genK(Gen.int()), Const.genK(Gen.int()))
     // val constEQK = Const.eqK(Int.eq())
@@ -58,44 +54,44 @@ class SumTest : UnitSpec() {
         genSumConst,
         sumConstEQK
       ), */
-      ComonadLaws.laws(Sum.comonad(Id.comonad(), Id.comonad()), genkSumId, sumIdEQK),
+      ComonadLaws.laws(Sum.comonad(Eval.comonad(), Eval.comonad()), genkSumEval, sumEvalEQK),
       HashLaws.laws(Sum.hash(IDH, IDH), genSum(), Sum.eq(IDEQ, IDEQ))
     )
 
-    val abSum = Sum.left(Id.just("A"), Id.just("B"))
+    val abSum = Sum.left(Eval.just("A"), Eval.just("B"))
 
     "Sum extract should return the view of the current side" {
-      abSum.extract(Id.comonad(), Id.comonad()) shouldBe "A"
+      abSum.extract(Eval.comonad(), Eval.comonad()) shouldBe "A"
     }
 
     "Sum changeSide should return the same Sum with desired side" {
       val sum = abSum.changeSide(Sum.Side.Right)
 
-      sum.extract(Id.comonad(), Id.comonad()) shouldBe "B"
+      sum.extract(Eval.comonad(), Eval.comonad()) shouldBe "B"
     }
 
     "Sum extend should transform view type" {
       val asciiValueFromLetter = { x: String -> x.first().toInt() }
-      val sum = abSum.coflatmap(Id.comonad(), Id.comonad()) {
+      val sum = abSum.coflatmap(Eval.comonad(), Eval.comonad()) {
         when (it.side) {
           is Sum.Side.Left -> asciiValueFromLetter(it.left.fix().extract())
           is Sum.Side.Right -> asciiValueFromLetter(it.right.fix().extract())
         }
       }
 
-      sum.extract(Id.comonad(), Id.comonad()) shouldBe 65
+      sum.extract(Eval.comonad(), Eval.comonad()) shouldBe 65
     }
 
     "Sum map should transform view type" {
       val asciiValueFromLetter = { x: String -> x.first().toInt() }
-      val sum = abSum.map(Id.functor(), Id.functor(), asciiValueFromLetter)
+      val sum = abSum.map(Eval.functor(), Eval.functor(), asciiValueFromLetter)
 
-      sum.extract(Id.comonad(), Id.comonad()) shouldBe 65
+      sum.extract(Eval.comonad(), Eval.comonad()) shouldBe 65
     }
   }
 }
 
-private fun genSum(): Gen<Sum<ForId, ForId, Int>> =
+private fun genSum(): Gen<Sum<ForEval, ForEval, Int>> =
   Gen.int().map {
-    Sum.left(Id.just(it), Id.just(it))
+    Sum.left(Eval.just(it), Eval.just(it))
   }

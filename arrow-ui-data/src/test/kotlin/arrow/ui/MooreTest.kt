@@ -1,7 +1,7 @@
 package arrow.ui
 
 import arrow.Kind
-import arrow.core.Id
+import arrow.core.Eval
 import arrow.core.test.UnitSpec
 import arrow.core.test.generators.GenK
 import arrow.core.test.laws.ComonadLaws
@@ -35,13 +35,13 @@ class MooreTest : UnitSpec() {
       ComonadLaws.laws(Moore.comonad(), genk(), EQK)
     )
 
-    fun handleRoute(route: String): Moore<String, Id<String>> = when (route) {
-      "About" -> Moore(Id("About"), ::handleRoute)
-      "Home" -> Moore(Id("Home"), ::handleRoute)
-      else -> Moore(Id("???"), ::handleRoute)
+    fun handleRoute(route: String): Moore<String, Eval<String>> = when (route) {
+      "About" -> Moore(Eval.just("About"), ::handleRoute)
+      "Home" -> Moore(Eval.just("Home"), ::handleRoute)
+      else -> Moore(Eval.just("???"), ::handleRoute)
     }
 
-    val routerMoore = Moore(Id("???"), ::handleRoute)
+    val routerMoore = Moore(Eval.just("???"), ::handleRoute)
 
     "routerMoore view should be about after sending about event" {
       val currentRoute = routerMoore
